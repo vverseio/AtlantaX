@@ -51,12 +51,12 @@ Our goal? To create a game that's simple to play yet rich with strategic depth�
 
 ## **Technical Stack**
 
-- **Frontend**: HTML5, CSS3, JavaScript (optional frameworks: React, Vue.js)
-- **Backend**: Node.js with Express for API and server logic
-- **Database**: MongoDB for storing player data and game state
-- **Real-Time**: WebSockets (via Socket.io) for live leaderboards and squad updates
-- **Build Tool**: Bun for rapid dependency management and builds
-- **Deployment Options**: Netlify, Vercel, Heroku, or custom servers
+- **Frontend**: React (with Vite)
+- **Backend**: Node.js with Express.js
+- **Database**: MongoDB (with Mongoose ODM)
+- **Real-Time Communication**: WebSockets (via Socket.IO)
+- **Development Environment**: Node.js & npm for backend, Vite dev server for frontend.
+- **Deployment Options**: Platforms supporting Node.js full-stack applications (e.g., Render, Heroku, AWS, DigitalOcean).
 
 ---
 
@@ -68,146 +68,141 @@ Follow these detailed steps to set up AtlantaX on your local machine.
 
 Ensure you have the following tools installed:
 
-- **Git**: For cloning the repository ([Download Git](https://git-scm.com/))
-- A modern web browser (Chrome, Firefox, etc.)
-- A code editor like VS Code (optional but recommended)
+- **Git**: For cloning the repository ([Download Git](https://git-scm.com/)).
+- **Node.js**: Version 18.x or higher recommended ([Download Node.js](https://nodejs.org/)). (This will include npm).
+- **MongoDB**: A running MongoDB instance (local or cloud-hosted like MongoDB Atlas). ([Install MongoDB](https://www.mongodb.com/try/download/community)).
+- A modern web browser (Chrome, Firefox, etc.).
+- A code editor like VS Code (optional but recommended).
 
-### **Installing Node.js**
+### **Setup Instructions**
 
-Node.js is required to run the backend and manage dependencies.
+1.  **Clone the Repository**:
+    ```bash
+    git clone https://github.com/yourusername/AtlantaX.git # Replace yourusername if you forked
+    cd AtlantaX
+    ```
 
-1. **Download Node.js**:
-   - Visit [nodejs.org](https://nodejs.org/) and download the LTS version (v16 or higher recommended).
-   - For Windows/Mac: Run the installer and follow the prompts.
-   - For Linux:
-     ```bash
-     sudo apt update
-     sudo apt install nodejs npm
-     ```
+2.  **Configure Environment Variables (Backend)**:
+    -   Navigate to the project root (`AtlantaX`).
+    -   Create a `.env` file by copying the example:
+        ```bash
+        cp .env.example .env
+        ```
+        (You might need to create `.env.example` first if it doesn't exist, with `PORT` and `MONGODB_URI`)
+    -   Edit the `.env` file with your settings:
+        ```env
+        PORT=3000
+        MONGODB_URI=mongodb://localhost:27017/atlantax
+        # Ensure your MongoDB server is running and accessible at this URI.
+        # For MongoDB Atlas, use your Atlas connection string.
+        ```
+        *Note: `SESSION_SECRET` is not currently used.*
 
-2. **Verify Installation**:
-   ```bash
-   node -v
-   npm -v
-   ```
-   You should see version numbers (e.g., `v18.17.0` for Node.js).
+3.  **Install Backend Dependencies**:
+    -   In the project root directory (`AtlantaX`):
+        ```bash
+        npm install
+        ```
 
-### **Installing Bun**
+4.  **Install Frontend Dependencies**:
+    -   Navigate to the `frontend` directory:
+        ```bash
+        cd frontend
+        npm install
+        cd ..
+        ```
+        (Return to the root directory)
 
-Bun is a fast JavaScript runtime and toolkit that speeds up development and builds.
+---
 
-1. **Install Bun**:
-   - On macOS/Linux:
-     ```bash
-     curl -fsSL https://bun.sh/install | bash
-     ```
-   - On Windows (via WSL or Git Bash):
-     ```bash
-     curl -fsSL https://bun.sh/install | bash
-     ```
-   - Alternatively, use npm:
-     ```bash
-     npm install -g bun
-     ```
+## **Running the Application (Development)**
 
-2. **Verify Installation**:
-   ```bash
-   bun --version
-   ```
-   Expect a version like `1.0.0` or higher.
+You'll need two terminals open to run both the backend and frontend development servers.
 
-### **Cloning and Setting Up the Project**
+1.  **Start the Backend Server**:
+    -   In your first terminal, from the project root (`AtlantaX`):
+        ```bash
+        npm run dev
+        ```
+    -   This will typically start the Node.js/Express server on `http://localhost:3000` (or the port specified in your `.env`).
 
-1. **Clone the Repository**:
-   ```bash
-   git clone https://github.com/yourusername/AtlantaX.git
-   cd AtlantaX
-   ```
-   Replace `yourusername` with your GitHub username after creating the repo.
+2.  **Start the Frontend Development Server**:
+    -   In your second terminal, navigate to the `frontend` directory:
+        ```bash
+        cd frontend
+        npm run dev
+        ```
+    -   This will start the Vite development server, usually on `http://localhost:5173`.
 
-2. **Install Dependencies**:
-   - With **Bun** (faster):
-     ```bash
-     bun install
-     ```
-   - With **npm** (traditional):
-     ```bash
-     npm install
-     ```
+3.  **Access the Application**:
+    -   Open your web browser and go to `http://localhost:5173`.
+    -   The frontend (running on Vite) will proxy API requests to the backend server.
 
-3. **Configure Environment Variables**:
-   - Create a `.env` file in the root directory:
-     ```bash
-     touch .env
-     ```
-   - Add these variables (customize as needed):
-     ```env
-     PORT=3000
-     MONGODB_URI=mongodb://localhost:27017/atlantax
-     SESSION_SECRET=your_random_secret_here
-     ```
+---
 
-4. **Start the Development Server**:
-   - Using **Bun**:
-     ```bash
-     bun run dev
-     ```
-   - Using **npm**:
-     ```bash
-     npm run dev
-     ```
-   - Open your browser to `http://localhost:3000` to see AtlantaX in action!
+## **Building for Production**
+
+1.  **Build the Frontend**:
+    -   Navigate to the `frontend` directory:
+        ```bash
+        cd frontend
+        npm run build
+        cd ..
+        ```
+        (Return to the root directory)
+    -   This will create optimized static assets in the `frontend/dist` directory. The backend Express server is already configured to serve files from this location.
+
+2.  **Backend**:
+    -   The Node.js backend (`src/backend/server.js`) does not require a separate build step. It runs directly using Node.
 
 ---
 
 ## **Deployment**
 
-Ready to share AtlantaX with the world? Here’s how to deploy it.
+Deploying a full-stack application like AtlantaX involves deploying both the Node.js backend and the React frontend assets.
 
-### **Building the Project**
+**General Steps for a Platform (e.g., Render, Heroku, VPS):**
 
-1. **Generate Production Files**:
-   - With **Bun**:
-     ```bash
-     bun run build
-     ```
-   - With **npm**:
-     ```bash
-     npm run build
-     ```
-   This creates a `dist` or `build` folder with optimized files.
+1.  **Platform Setup**:
+    -   Choose a hosting platform that supports Node.js applications.
+    -   Configure your platform to install dependencies using `npm install` for the root `package.json` (for backend) and then `cd frontend && npm install` for the frontend.
 
-### **Deploying to a Web Host**
+2.  **Build Command**:
+    -   Set your platform's build command to build the React frontend. This typically involves:
+        ```bash
+        cd frontend && npm run build
+        ```
 
-Choose your hosting platform and follow these general steps:
+3.  **Start Command**:
+    -   Set your platform's start command to run the Node.js backend server:
+        ```bash
+        npm start
+        ```
+        (This relies on the `start` script in the root `package.json`, which should be `node src/backend/server.js`).
 
-- **Static Hosting (Frontend Only)**:
-  - Platforms: Netlify, Vercel, GitHub Pages
-  - Steps:
-    1. Push the `build` folder to your host.
-    2. For GitHub Pages:
-       ```bash
-       git subtree push --prefix build origin gh-pages
-       ```
-    3. Configure your domain (optional).
+4.  **Environment Variables**:
+    -   Set the `MONGODB_URI` (and `PORT` if necessary) environment variables on your hosting platform, similar to your local `.env` file.
+    -   Ensure `NODE_ENV` is set to `production` on the hosting platform for optimizations.
 
-- **Full Deployment (Frontend + Backend)**:
-  - Platforms: Heroku, AWS, DigitalOcean
-  - Steps:
-    1. Deploy the backend:
-       ```bash
-       git push heroku main
-       ```
-    2. Set environment variables on the platform’s dashboard.
-    3. Link the frontend to the backend’s API URL (e.g., `https://yourapp.herokuapp.com`).
+5.  **Serving Frontend**:
+    -   The Express backend is already configured to serve static files from `frontend/dist`. Ensure your hosting service correctly routes all non-API traffic to the Node.js server so it can serve the React app's `index.html`.
+
+**Example (Conceptual for Render):**
+-   **Build Command**: `npm install && cd frontend && npm install && npm run build`
+-   **Start Command**: `node src/backend/server.js` (or `npm start` if defined in root `package.json`)
 
 ---
 
 ## **Usage**
 
-- **Playing**: Tap the screen to earn coins, buy upgrades, and join squads via the web interface.
-- **Developing**: Modify the source code in `src/` and use `bun run dev` to test changes.
-- **Testing**: Run `bun test` or `npm test` (if tests are implemented).
+- **Playing**: Access the game via the frontend URL (e.g., `http://localhost:5173` in development). Tap the screen to earn coins, buy upgrades, join squads, and view leaderboards.
+- **Backend Development**: Modify source code in `src/backend/`. The server (`npm run dev` in root) will typically auto-restart due to `nodemon`.
+- **Frontend Development**: Modify source code in `frontend/src/`. The Vite dev server (`npm run dev` in `frontend/`) provides Hot Module Replacement (HMR) for fast updates.
+- **Testing**: (Placeholder for future test instructions)
+  ```bash
+  # Example: npm test (if tests are added to root package.json)
+  # cd frontend && npm test (if tests are added to frontend package.json)
+  ```
 
 ---
 
